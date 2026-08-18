@@ -17,7 +17,7 @@ qt_add_executable(trading_application
     main.h
     loginwindow.cpp
     loginwindow.ui
-    user.h user.cpp
+
     .gitignore
     appflow.h appflow.cpp
 )
