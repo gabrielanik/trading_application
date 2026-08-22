@@ -20,6 +20,8 @@ qt_add_executable(trading_application
 
     .gitignore
     appflow.h appflow.cpp
+    dbmanager.h dbmanager.cpp
+
 )
 
 target_link_libraries(trading_application
