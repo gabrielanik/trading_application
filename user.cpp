@@ -1,48 +1,36 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <map>
-
 #include "user.h"
 
-int user::getId() const{
+int User::getId() const{
     return id;
 }
 
-std::string user::getUsername() const{
-    return username;
-}
+int readUsers(const QString& uname, const QString& pass){
 
-std::string user::getPassword() const{
-    return password;
-}
+    int id = 0;
 
-std::vector<user> readUsers(const std::string& filename){
-    std::vector<user> users;
-    std::ifstream fin(filename);
-    if (!fin.is_open()) {
-        std::cerr << "Could not open file '" << filename << "'\n";
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("/Users/gabrielanik/trading_application/trading.db");
+
+    if(!db.open()) {
+        qDebug() << "Database error:"
+                 << db.lastError().text();
     }
 
-    std::string line;
-    while (std::getline(fin, line)) {
-        if (line.empty()) continue;
+    QSqlQuery query(db);
 
-        std::stringstream ss(line);
-        std::string userId, username, password;
+    query.prepare("SELECT id FROM users WHERE username = :uname AND password = :pass");
+    query.bindValue(":uname", uname);
+    query.bindValue(":pass", pass);
 
-        // Split by comma
-        if (!std::getline(ss, userId, ',')) continue;
-        if (!std::getline(ss, username, ',')) continue;
-        if (!std::getline(ss, password, ',')) continue;
-
-        if (userId.empty() || username.empty() || password.empty()) continue;
-
-        int id = std::stoi(userId);
-        users.emplace_back(id, username, password);
+    if(!query.exec()){
+        qDebug() << "Query error:"
+                 << query.lastError().text();
     }
 
-    return users;
+    if(query.next()){
+        id = query.value("id").toInt();
+    }
+
+    return id;
 
 }
