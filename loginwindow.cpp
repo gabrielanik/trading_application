@@ -1,9 +1,10 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
 
-LogInWindow::LogInWindow(QWidget *parent, Qt::WindowFlags f)
+LogInWindow::LogInWindow(DBManager* dbManager, QWidget *parent, Qt::WindowFlags f)
     : QDialog(parent)
-    , ui(new Ui::LogInWindow)
+    , ui(new Ui::LogInWindow),
+    m_db(dbManager)
 {
     ui->setupUi(this);
 }
@@ -13,7 +14,7 @@ LogInWindow::~LogInWindow()
     delete ui;
 }
 
-int LogInWindow::authUser(const QString &uname, QString &pass){
+int LogInWindow::authUser(const QString &uname, const QString &pass){
     int id = 0;
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
@@ -50,7 +51,7 @@ void LogInWindow::on_logInButton_clicked(){
     int id = authUser(uname, pass);
 
     if (id != 0) {
-        emit loginSuccess(id);
+        emit loginSuccess(id, m_db);
     } else {
         ui->invMessTextEdit->appendPlainText("Incorrect credentials.");
     }

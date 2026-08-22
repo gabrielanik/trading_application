@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include <string>
+#include <QObject>
 #ifndef CONSTANTS
 #define CONSTANTS
 
