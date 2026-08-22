@@ -128,7 +128,9 @@ color: rgb(50, 50, 50);
     <cursorShape>ArrowCursor</cursorShape>
    </property>
    <property name="styleSheet">
-    <string notr="true">background: rgba(242, 250, 255, 0)</string>
+    <string notr="true">background: rgba(242, 250, 255, 0);
+color:rgb(255, 156, 157);
+</string>
    </property>
    <property name="frameShape">
     <enum>QFrame::Shape::VLine</enum>
