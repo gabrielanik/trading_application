@@ -7,6 +7,8 @@
 #include <QSqlError>
 #include <QDebug>
 #include <QSqlQuery>
+#include <QStandardItem>
+#include <QStandardItemModel>
 #include <memory>
 #include <vector>
 #include "main.h"
@@ -35,7 +37,7 @@ private:
 
     void loadAccountData(const int userId);
     void setLCD(const double balance, const QString currency);
-    void setTableView(std::vector<Holdings> portfolio);
+    void setTableView(const std::map <QString, Holdings> portfolio);
 };
 
 #endif // MAINWINDOW_H
