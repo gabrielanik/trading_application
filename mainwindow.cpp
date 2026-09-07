@@ -2,13 +2,23 @@
 #include "ui_mainwindow.h"
 #include "account.h"
 #include "dbmanager.h"
+#include "stockmanager.h"
 
 MainWindow::MainWindow(const int userId, DBManager* dbManager, QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow),
-    m_db(dbManager)
+    : QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    m_db(dbManager),
+    m_model(new QStandardItemModel(this))
 {
     ui->setupUi(this);
+
+    m_stockManager = new StockManager(this);
+
+    connect(m_stockManager,
+            &StockManager::priceReceived,
+            this,
+            &MainWindow::updateStockPrice);
+
     loadAccountData(userId);
 }
 
@@ -30,22 +40,29 @@ void MainWindow::loadAccountData(const int userId){
 }
 
 void MainWindow::setLCD(const double balance, const QString currency){
-    ui->lcdBalance->display(balance);
+
+    ui->lcdBalance->setDigitCount(6);
+    ui->lcdBalance->display(QString::number(balance, 'f', 2));
     ui->currencyTextEdit->appendPlainText(currency);
 }
 
 void MainWindow::setTableView(const std::map <QString, Holdings> portfolio){
 
-    auto *model = new QStandardItemModel(this);
-
-    model->setHorizontalHeaderLabels({
+    m_model->setHorizontalHeaderLabels({
         "Stock",
         "Shares",
-        "Investment"
+        "Investment",
+        "Current price"
     });
 
-    for (const auto& [stock, holding] : portfolio) {
+    ui->tableView->setModel(m_model);
+    ui->tableView->verticalHeader()->hide();
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
+    int rowIndex = 0;
+
+    for (const auto& [stock, holding] : portfolio)
+    {
         QList<QStandardItem*> row;
 
         row.append(
@@ -58,22 +75,53 @@ void MainWindow::setTableView(const std::map <QString, Holdings> portfolio){
                 )
             );
 
-        QString investment =
-            QString::number(
-                holding.investment,
-                'f',
-                2
-                )
-            + " "
-            + holding.currency;
-
         row.append(
-            new QStandardItem(investment)
+            new QStandardItem(
+                QString::number(holding.investment, 'f', 2)
+                + " "
+                + holding.currency
+                )
             );
 
-        model->appendRow(row);
+        row.append(
+            new QStandardItem("Loading...")
+            );
+
+        m_model->appendRow(row);
+
+        m_stockRows.insert(stock, rowIndex);
+
+        m_stockManager->getPrice(stock);
+
+        ++rowIndex;
     }
 
-    ui->tableView->setModel(model);
-    ui->tableView->verticalHeader()->hide();
+}
+
+void MainWindow::updateStockPrice(const QString& stock, double price){
+
+    if (!m_model) {
+        qDebug() << "m_model is null";
+        return;
+    }
+
+    if (!m_stockRows.contains(stock)) {
+        qDebug() << "No row found for stock:" << stock;
+        return;
+    }
+
+    int row = m_stockRows.value(stock);
+
+    QStandardItem* priceItem =
+        m_model->item(row, 3);
+
+    if (!priceItem) {
+        qDebug() << "Price item is null for row:" << row;
+        return;
+    }
+
+    priceItem->setText(
+        QString::number(price, 'f', 2)
+        );
+
 }
