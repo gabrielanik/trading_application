@@ -3,6 +3,7 @@
 
 #include <string>
 #include <QObject>
+#include <QString>
 #ifndef CONSTANTS
 #define CONSTANTS
 
@@ -14,7 +15,8 @@ inline constexpr const char* accsNewFile = "accountsnew.csv";
 
 struct Holdings {
     double shares;
-    double value;
+    double investment;
+    QString currency;
 };
 
 // prices from 14.03.2026

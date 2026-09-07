@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>355</width>
+    <width>418</width>
     <height>511</height>
    </rect>
   </property>
@@ -28,7 +28,7 @@
      <rect>
       <x>100</x>
       <y>30</y>
-      <width>191</width>
+      <width>221</width>
       <height>51</height>
      </rect>
     </property>
@@ -37,6 +37,9 @@
       <bold>true</bold>
       <kerning>false</kerning>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">outline: rgba(255, 255, 255, 0)</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -62,7 +65,7 @@
    <widget class="QPlainTextEdit" name="currencyTextEdit">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>330</x>
       <y>50</y>
       <width>41</width>
       <height>31</height>
@@ -90,7 +93,7 @@
      <rect>
       <x>0</x>
       <y>90</y>
-      <width>361</width>
+      <width>421</width>
       <height>16</height>
      </rect>
     </property>
@@ -103,7 +106,7 @@
      <rect>
       <x>0</x>
       <y>400</y>
-      <width>361</width>
+      <width>421</width>
       <height>16</height>
      </rect>
     </property>
@@ -135,7 +138,7 @@
      <rect>
       <x>20</x>
       <y>130</y>
-      <width>311</width>
+      <width>371</width>
       <height>251</height>
      </rect>
     </property>
@@ -145,12 +148,38 @@
      <rect>
       <x>0</x>
       <y>10</y>
-      <width>371</width>
+      <width>421</width>
       <height>16</height>
      </rect>
     </property>
     <property name="orientation">
      <enum>Qt::Orientation::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>430</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Buy</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>430</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sell</string>
     </property>
    </widget>
   </widget>
@@ -159,7 +188,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>355</width>
+     <width>418</width>
      <height>22</height>
     </rect>
    </property>
