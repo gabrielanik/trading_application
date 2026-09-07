@@ -44,8 +44,8 @@ int LogInWindow::authUser(const QString &uname, QString &pass){
 
 void LogInWindow::on_logInButton_clicked(){
 
-    QString uname = ui->unameTextEdit->toPlainText();
-    QString pass = ui->passTextEdit->toPlainText();
+    QString uname = ui->unameLineEdit->text();
+    QString pass = ui->passLineEdit->text();
 
     int id = authUser(uname, pass);
 
