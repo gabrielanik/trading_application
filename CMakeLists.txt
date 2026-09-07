@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(trading_application LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql Network)
 
 qt_standard_project_setup()
 
@@ -21,6 +21,7 @@ qt_add_executable(trading_application
     .gitignore
     appflow.h appflow.cpp
     dbmanager.h dbmanager.cpp
+    stockmanager.h stockmanager.cpp
 
 )
 
@@ -29,6 +30,7 @@ target_link_libraries(trading_application
         Qt::Core
         Qt::Widgets
         Qt::Sql
+        Qt6::Network
 )
 
 install(TARGETS trading_application

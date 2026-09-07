@@ -5,17 +5,17 @@
 #include <vector>
 
 
-void Account::buy(const int userId, std::vector<Account> accounts, const std::string& stock, double amount, double price, std::string& action){
+void Account::buy(const int userId, std::vector<Account> accounts, const QString& stock, double amount, double price, QString& action){
     double total = amount*price;
     portfolio[stock].shares += amount;
-    portfolio[stock].value += total;
+    portfolio[stock].investment += total;
    // updateAccount(userId, accounts, action, stock, amount, total);
 }
 
-void Account::sell(const int userId, std::vector<Account> accounts, const std::string& stock, double amount, double price, std::string& action){
+void Account::sell(const int userId, std::vector<Account> accounts, const QString& stock, double amount, double price, QString& action){
     double total = amount*price;
     portfolio[stock].shares -= amount;
-    portfolio[stock].value -= total;
+    portfolio[stock].investment -= total;
     // updateAccount(userId, accounts, action, stock, amount, total);
 }
 
@@ -31,11 +31,11 @@ QString Account::getCurrency() const{
     return currency;
 }
 
-std::map <std::string, Holdings> Account::getPortfolio() const{
+std::map <QString, Holdings> Account::getPortfolio() const{
     return portfolio;
 }
 
-void Account::setPortfolio(std::map <std::string, Holdings> p){
+void Account::setPortfolio(std::map <QString, Holdings> p){
     portfolio = p;
 }
 
