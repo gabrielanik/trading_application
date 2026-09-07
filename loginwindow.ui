@@ -58,25 +58,6 @@ color: rgb(50, 50, 50);
     <string>Username:</string>
    </property>
   </widget>
-  <widget class="QPlainTextEdit" name="unameTextEdit">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>130</y>
-     <width>141</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="mouseTracking">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background: rgb(116, 118, 118)</string>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Shadow::Plain</enum>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
@@ -88,25 +69,6 @@ color: rgb(50, 50, 50);
    </property>
    <property name="text">
     <string>Password:</string>
-   </property>
-  </widget>
-  <widget class="QPlainTextEdit" name="passTextEdit">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>190</y>
-     <width>141</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="mouseTracking">
-    <bool>true</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background: rgb(116, 118, 118)</string>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Shadow::Plain</enum>
    </property>
   </widget>
   <widget class="QPlainTextEdit" name="invMessTextEdit">
@@ -158,6 +120,29 @@ color:rgb(255, 156, 157);
    </property>
    <property name="text">
     <string>TRADING</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="passLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>190</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="echoMode">
+    <enum>QLineEdit::EchoMode::Password</enum>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="unameLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>130</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
    </property>
   </widget>
  </widget>
