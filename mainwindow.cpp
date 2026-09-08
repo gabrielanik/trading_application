@@ -34,16 +34,35 @@ void MainWindow::loadAccountData(const int userId){
     std::map<QString, Holdings> portfolio = m_db->getHoldings(userId);
     m_account->setPortfolio(portfolio);
 
-    setLCD(m_account->getBalance(), m_account->getCurrency());
+    setBalance(m_account->getPortfolio(), m_account->getBalance(),
+               m_account->getCurrency());
 
     setTableView(portfolio);
 }
 
-void MainWindow::setLCD(const double balance, const QString currency){
+void MainWindow::setBalance(const std::map <QString, Holdings> portfolio,
+                            const double balance, const QString currency){
 
-    ui->lcdBalance->setDigitCount(6);
-    ui->lcdBalance->display(QString::number(balance, 'f', 2));
-    ui->currencyTextEdit->appendPlainText(currency);
+
+    double sum = 0;
+    QString symbol;
+    for (const auto& [stock, holding] : portfolio)
+    {
+        sum += holding.investment;
+    }
+
+    double accountValue = sum + balance;
+
+    if(currency == "USD"){
+        symbol = "$";
+    }else if(currency == "EUR"){
+        symbol = "€";
+    }
+
+    ui->accValueTextEdit->appendPlainText(symbol + QString::number(accountValue, 'f', 2));
+    ui->sumTextEdit->appendPlainText(symbol + QString::number(sum, 'f', 2));
+    ui->balanceTextEdit->appendPlainText(symbol + QString::number(balance, 'f', 2));
+
 }
 
 void MainWindow::setTableView(const std::map <QString, Holdings> portfolio){
