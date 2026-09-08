@@ -22,6 +22,7 @@ qt_add_executable(trading_application
     appflow.h appflow.cpp
     dbmanager.h dbmanager.cpp
     stockmanager.h stockmanager.cpp
+    orderdialog.ui
 
 )
 
