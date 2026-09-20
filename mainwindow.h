@@ -33,12 +33,19 @@ public:
     explicit MainWindow(const int userId, DBManager *dbManager, QWidget *parent = nullptr);
     ~MainWindow() override;
 
+signals:
+    void orderRequest(const QString order, DBManager *dbManager, Account *account, StockManager *stockManager);
+
+private slots:
+    void on_buyPushButton_clicked();
+    void on_sellPushButton_clicked();
+
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *ui = nullptr;
     std::unique_ptr<Account> m_account;
-    DBManager *m_db;
-    StockManager *m_stockManager;
-    QStandardItemModel *m_model;
+    DBManager *m_db = nullptr;
+    StockManager *m_stockManager = nullptr;
+    QStandardItemModel *m_model = nullptr;
     QMap<QString, int> m_stockRows;
 
     void loadAccountData(const int userId);
