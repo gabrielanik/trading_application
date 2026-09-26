@@ -74,3 +74,93 @@ std::map<QString, Holdings> DBManager::getHoldings(const int id){
     return portfolio;
 
 }
+
+void DBManager::persistData(const int id, const QString &stock, const double shares,
+                            const double total, const QString &currency, const QString &order,
+                            Account* acc){
+
+
+    std::map<QString, Holdings> portfolio = acc->getPortfolio();
+
+    QSqlQuery query(m_db);
+
+    if(order == "Buy"){
+
+        query.prepare( "UPDATE accounts "
+                         "SET balance = balance - :total "
+                          "WHERE user_id = :id" );
+
+        query.bindValue(":id", id);
+        query.bindValue(":total", total);
+
+        if(!query.exec()){
+            qDebug() << "Query error:"
+                     << query.lastError().text();
+        }
+
+        auto it = portfolio.find(stock);
+
+        if(it == portfolio.end()){
+
+            query.prepare( "INSERT INTO portfolios "
+                            "(user_id, stock, shares, investment, currency) "
+                             "VALUES (:id, :stock, :shares, :total, :currency)");
+
+            query.bindValue(":shares", shares);
+            query.bindValue(":total", total);
+            query.bindValue(":stock", stock);
+            query.bindValue(":id", id);
+            query.bindValue(":currency", currency);
+
+            if(!query.exec()){
+                qDebug() << "Query error:"
+                         << query.lastError().text();
+            }
+
+        } else{
+
+            query.prepare( "UPDATE portfolios "
+                             "SET shares = shares + :shares, "
+                               "investment = investment + :total "
+                                  "WHERE stock = :stock "
+                                    "AND user_id = :id" );
+
+            query.bindValue(":shares", shares);
+            query.bindValue(":total", total);
+            query.bindValue(":stock", stock);
+            query.bindValue(":id", id);
+
+            if(!query.exec()){
+                qDebug() << "Query error:"
+                         << query.lastError().text();
+            }
+        }
+
+    } else{
+
+        query.prepare( "UPDATE accounts "
+                        "SET balance = balance + :total "
+                          "WHERE user_id = :id" );
+
+        query.bindValue(":id", id);
+        query.bindValue(":total", total);
+
+        query.prepare( "UPDATE portfolios "
+                        "SET shares = shares - :shares, "
+                          "investment = investment - :total "
+                            "WHERE stock = :stock "
+                              "AND user_id = :id" );
+
+        query.bindValue(":shares", shares);
+        query.bindValue(":total", total);
+        query.bindValue(":stock", stock);
+        query.bindValue(":id", id);
+
+        if(!query.exec()){
+            qDebug() << "Query error:"
+                     << query.lastError().text();
+        }
+
+    }
+
+}

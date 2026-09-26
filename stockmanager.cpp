@@ -8,7 +8,7 @@ StockManager::StockManager(QObject *parent): QObject(parent)
 void StockManager::getPrice(const QString& stock){
 
     QString urlString =
-        "https://api.twelvedata.com/price?symbol="
+        "https://api.twelvedata.com/quote?symbol="
         + stock
         + "&apikey=apikey";
 
@@ -39,9 +39,12 @@ void StockManager::getPrice(const QString& stock){
                     document.object();
 
                 double price =
-                    object["price"].toString().toDouble();
+                    object["close"].toString().toDouble();
 
-                emit priceReceived(stock, price);
+                QString currency =
+                    object["currency"].toString();
+
+                emit priceReceived(stock, price, currency);
 
                 reply->deleteLater();
             });

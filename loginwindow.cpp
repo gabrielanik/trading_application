@@ -1,9 +1,9 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
 
-LogInWindow::LogInWindow(DBManager* dbManager, QWidget *parent, Qt::WindowFlags f)
-    : QDialog(parent)
-    , ui(new Ui::LogInWindow),
+LogInWindow::LogInWindow(DBManager *dbManager, QWidget *parent, Qt::WindowFlags f)
+    : QDialog(parent),
+    ui(new Ui::LogInWindow),
     m_db(dbManager)
 {
     ui->setupUi(this);

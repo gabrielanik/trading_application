@@ -8,11 +8,10 @@ MainWindow::MainWindow(const int userId, DBManager* dbManager, QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     m_db(dbManager),
+    m_stockManager(new StockManager(this)),
     m_model(new QStandardItemModel(this))
 {
     ui->setupUi(this);
-
-    m_stockManager = new StockManager(this);
 
     connect(m_stockManager,
             &StockManager::priceReceived,
@@ -117,7 +116,7 @@ void MainWindow::setTableView(const std::map <QString, Holdings> portfolio){
 
 }
 
-void MainWindow::updateStockPrice(const QString& stock, double price){
+void MainWindow::updateStockPrice(const QString& stock, const double price, const QString& currency){
 
     if (!m_model) {
         qDebug() << "m_model is null";
@@ -143,4 +142,13 @@ void MainWindow::updateStockPrice(const QString& stock, double price){
         QString::number(price, 'f', 2)
         );
 
+}
+
+void MainWindow::on_buyPushButton_clicked(){
+
+    emit orderRequest("Buy", m_db, m_account.get(), m_stockManager );
+}
+void::MainWindow::on_sellPushButton_clicked(){
+
+    emit orderRequest("Sell", m_db, m_account.get(), m_stockManager );
 }
