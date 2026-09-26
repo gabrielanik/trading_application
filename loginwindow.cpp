@@ -45,6 +45,8 @@ int LogInWindow::authUser(const QString &uname, const QString &pass){
 
 void LogInWindow::on_logInButton_clicked(){
 
+    ui->invMessTextEdit->clear();
+
     QString uname = ui->unameLineEdit->text();
     QString pass = ui->passLineEdit->text();
 

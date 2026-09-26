@@ -36,8 +36,8 @@
     <rect>
      <x>3</x>
      <y>2</y>
-     <width>29</width>
-     <height>27</height>
+     <width>26</width>
+     <height>26</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -93,9 +93,9 @@ QLineEdit:focus {
    <property name="geometry">
     <rect>
      <x>130</x>
-     <y>63</y>
+     <y>65</y>
      <width>25</width>
-     <height>27</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -409,7 +409,7 @@ color:rgb(255, 156, 157);
 }
 
 QPushButton:hover {
-    background-color: rgb(92, 93, 93);
+    background-color: rgb(130, 132, 132);
 }
 
 QPushButton:pressed {

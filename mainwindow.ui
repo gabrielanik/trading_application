@@ -154,8 +154,8 @@ border-style: none
     <property name="font">
      <font>
       <pointsize>15</pointsize>
-      <bold>false</bold>
       <kerning>true</kerning>
+      <fontweight>DemiBold</fontweight>
      </font>
     </property>
     <property name="cursor">
@@ -163,12 +163,22 @@ border-style: none
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
-    border-style: none;
-    border-radius: 6px;
     background-color: rgb(92, 93, 93);
     color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    font-weight: 600;
 }
-</string>
+
+QPushButton:hover {
+    background-color: rgb(130, 132, 132);
+}
+
+QPushButton:pressed {
+    background-color: rgb(65, 66, 66);
+}</string>
     </property>
     <property name="text">
      <string>Buy</string>
@@ -189,8 +199,8 @@ border-style: none
     <property name="font">
      <font>
       <pointsize>15</pointsize>
-      <bold>false</bold>
       <kerning>true</kerning>
+      <fontweight>DemiBold</fontweight>
      </font>
     </property>
     <property name="cursor">
@@ -198,12 +208,22 @@ border-style: none
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
-    border-style: none;
-    border-radius: 6px;
     background-color: rgb(92, 93, 93);
     color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    font-weight: 600;
 }
-</string>
+
+QPushButton:hover {
+    background-color: rgb(130, 132, 132);
+}
+
+QPushButton:pressed {
+    background-color: rgb(65, 66, 66);
+}</string>
     </property>
     <property name="text">
      <string>Sell</string>
