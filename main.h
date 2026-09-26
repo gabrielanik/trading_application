@@ -19,12 +19,4 @@ struct Holdings {
     QString currency;
 };
 
-// prices from 14.03.2026
-inline const std::map<std::string, double> prices{
-                                                  {"APC", 220.70},
-                                                  {"NVD", 158.60},
-                                                  {"VUAA", 111.99},
-                                                  };
-
-
 #endif // MAIN_H

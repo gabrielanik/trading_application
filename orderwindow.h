@@ -41,11 +41,13 @@ private:
     DBManager *m_db = nullptr;
     Account *m_acc = nullptr;
     StockManager *m_stockManager = nullptr;
-    double m_price;
+    double m_price = 0.00;
+    QString m_currency;
+    double m_estimatedPrice = 0.00;
 
     void loadBalance(const double balance, const QString currency);
     void loadStockData(const QString stock);
-    void updateStockPrice(const QString& stock, const double price);
+    void updateStockPrice(const QString& stock, const double price, const QString& currency);
 
 };
 

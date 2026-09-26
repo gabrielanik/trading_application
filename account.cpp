@@ -5,18 +5,18 @@
 #include <vector>
 
 
-void Account::buy(const int userId, std::vector<Account> accounts, const QString& stock, double amount, double price, QString& action){
+void Account::buy(const int userId, const QString& stock, const double amount, const double price){
     double total = amount*price;
     portfolio[stock].shares += amount;
     portfolio[stock].investment += total;
-   // updateAccount(userId, accounts, action, stock, amount, total);
+
+    // case when buying a new stock
 }
 
-void Account::sell(const int userId, std::vector<Account> accounts, const QString& stock, double amount, double price, QString& action){
+void Account::sell(const int userId, const QString& stock, const double amount, const double price){
     double total = amount*price;
     portfolio[stock].shares -= amount;
     portfolio[stock].investment -= total;
-    // updateAccount(userId, accounts, action, stock, amount, total);
 }
 
 int Account::getId() const{
@@ -35,8 +35,12 @@ std::map <QString, Holdings> Account::getPortfolio() const{
     return portfolio;
 }
 
-void Account::setPortfolio(std::map <QString, Holdings> p){
+void Account::setPortfolio(const std::map <QString, Holdings> p){
     portfolio = p;
+}
+
+void Account::setBalance(const double b){
+    balance = b;
 }
 
 

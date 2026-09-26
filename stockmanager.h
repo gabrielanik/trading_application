@@ -21,7 +21,7 @@ public:
 
 signals:
 
-    void priceReceived(const QString& stock, double price);
+    void priceReceived(const QString& stock, const double price, const QString& currency);
 
 private:
 

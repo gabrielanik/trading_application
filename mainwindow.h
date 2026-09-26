@@ -51,7 +51,7 @@ private:
     void loadAccountData(const int userId);
     void setBalance(const std::map <QString, Holdings> portfolio, const double balance, const QString currency);
     void setTableView(const std::map <QString, Holdings> portfolio);
-    void updateStockPrice(const QString& stock, double price);
+    void updateStockPrice(const QString& stock, double price, const QString& currency);
 };
 
 #endif // MAINWINDOW_H

@@ -21,6 +21,9 @@ public:
     DBManager();
     std::unique_ptr<Account> getAccount(const int id);
     std::map <QString, Holdings> getHoldings(const int id);
+    void persistData(const int id, const QString& stock, const double shares,
+                     const double total, const QString &currency, const QString& order,
+                     Account *acc);
 
 private:
     QSqlDatabase m_db;
