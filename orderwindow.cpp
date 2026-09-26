@@ -2,6 +2,7 @@
 #include "ui_orderwindow.h"
 #include "account.h"
 #include "stockmanager.h"
+#include "dbmanager.h"
 
 OrderWindow::OrderWindow(const QString &order, DBManager *dbManager,
                          Account *account, StockManager *stockManager, QWidget *parent): QDialog(parent),
@@ -34,9 +35,47 @@ OrderWindow::~OrderWindow(){
 
 void OrderWindow::on_executeOrderButton_clicked(){
 
-    // validations
+    int order = ( m_order == "Buy") ? 1 : 2;
 
-    emit orderExecuted();
+    switch(order){
+      case 1:
+
+        if(m_estimatedPrice > m_acc->getBalance()){
+
+            ui->messageTextEdit->appendPlainText("Available balance exceeded.");
+            ui->estPricePlainTextEdit->setStyleSheet("background:transparent;color:rgb(255, 156, 157);");
+
+        }else{
+
+            m_db->persistData(m_acc->getId(), ui->stockLineEdit->text(), ui->sharesLineEdit->text().toDouble(),
+                              m_estimatedPrice, m_currency, m_order, m_acc);
+
+            m_acc->buy(m_acc->getId(), ui->stockLineEdit->text(), ui->sharesLineEdit->text().toDouble(),
+                       ui->stockPriceLabel->text().toDouble());
+
+            emit orderExecuted();
+        }
+        break;
+
+      case 2:
+
+          if(ui->sharesLineEdit->text().toDouble() > ui->oSharesPlainTextEdit->toPlainText().toDouble()){
+
+              ui->messageTextEdit->appendPlainText("Not enough owned shares.");
+              ui->estPricePlainTextEdit->setStyleSheet("background:transparent;color:rgb(255, 156, 157);");
+
+          }else{
+
+              m_db->persistData(m_acc->getId(), ui->stockLineEdit->text(), ui->sharesLineEdit->text().toDouble(),
+                                m_estimatedPrice, m_currency, m_order, m_acc);
+
+              m_acc->sell(m_acc->getId(), ui->stockLineEdit->text(), ui->sharesLineEdit->text().toDouble(),
+                         ui->stockPriceLabel->text().toDouble());
+
+          }
+
+    }
+
 }
 
 void OrderWindow::on_searchButton_clicked(){
@@ -78,19 +117,39 @@ void OrderWindow::loadStockData(const QString stock){
 
 }
 
-void OrderWindow::updateStockPrice(const QString& stock, const double price){
+void OrderWindow::updateStockPrice(const QString& stock, const double price, const QString& currency){
 
-    ui->stockPriceLabel->setText(QString::number(price, 'f', 2));
+    QString symbol;
+
+    if(currency == "USD"){
+        symbol = "$";
+    }else if(currency == "EUR"){
+        symbol = "€";
+    }
+
+    ui->stockPriceLabel->setText(symbol + QString::number(price, 'f', 2));
     m_price = price;
+    m_currency = currency;
 }
 
 void OrderWindow::on_sharesLineEdit_textChanged(const QString& text){
 
-    double shares = text.toDouble();
+    ui->messageTextEdit->clear();
+    ui->estPricePlainTextEdit->setStyleSheet("background:transparent;color:white;");
 
+    double shares = text.toDouble();
     double total = shares * m_price;
+    QString symbol;
+
+    if(m_currency == "USD"){
+        symbol = "$";
+    }else if(m_currency == "EUR"){
+        symbol = "€";
+    }
 
     ui->estPricePlainTextEdit->clear();
-    ui->estPricePlainTextEdit->appendPlainText(QString::number(total, 'f', 2));
+    ui->estPricePlainTextEdit->appendPlainText(symbol + QString::number(total, 'f', 2));
+
+    m_estimatedPrice = total;
 
 }

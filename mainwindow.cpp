@@ -13,8 +13,6 @@ MainWindow::MainWindow(const int userId, DBManager* dbManager, QWidget *parent)
 {
     ui->setupUi(this);
 
-    // m_stockManager = new StockManager(this);
-
     connect(m_stockManager,
             &StockManager::priceReceived,
             this,
@@ -118,7 +116,7 @@ void MainWindow::setTableView(const std::map <QString, Holdings> portfolio){
 
 }
 
-void MainWindow::updateStockPrice(const QString& stock, double price){
+void MainWindow::updateStockPrice(const QString& stock, const double price, const QString& currency){
 
     if (!m_model) {
         qDebug() << "m_model is null";
