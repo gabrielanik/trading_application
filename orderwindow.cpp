@@ -35,50 +35,29 @@ OrderWindow::~OrderWindow(){
 
 void OrderWindow::on_executeOrderButton_clicked(){
 
-    int order = ( m_order == "Buy") ? 1 : 2;
+    m_db->persistData(m_acc->getId(), ui->stockLineEdit->text(), ui->sharesLineEdit->text().toDouble(),
+                    m_estimatedPrice, m_currency, m_order, m_acc);
 
-    switch(order){
-      case 1:
+    if(m_order == "Buy"){
+      m_acc->buy(m_acc->getId(), ui->stockLineEdit->text(), ui->sharesLineEdit->text().toDouble(),
+               ui->stockPriceLabel->text().toDouble());
 
-        if(m_estimatedPrice > m_acc->getBalance()){
+      emit orderExecuted();
+    } else if (m_order == "Sell"){
+      m_acc->sell(m_acc->getId(), ui->stockLineEdit->text(), ui->sharesLineEdit->text().toDouble(),
+                ui->stockPriceLabel->text().toDouble());
 
-            ui->messageTextEdit->appendPlainText("Available balance exceeded.");
-            ui->estPricePlainTextEdit->setStyleSheet("background:transparent;color:rgb(255, 156, 157);");
-
-        }else{
-
-            m_db->persistData(m_acc->getId(), ui->stockLineEdit->text(), ui->sharesLineEdit->text().toDouble(),
-                              m_estimatedPrice, m_currency, m_order, m_acc);
-
-            m_acc->buy(m_acc->getId(), ui->stockLineEdit->text(), ui->sharesLineEdit->text().toDouble(),
-                       ui->stockPriceLabel->text().toDouble());
-
-            emit orderExecuted();
-        }
-        break;
-
-      case 2:
-
-          if(ui->sharesLineEdit->text().toDouble() > ui->oSharesPlainTextEdit->toPlainText().toDouble()){
-
-              ui->messageTextEdit->appendPlainText("Not enough owned shares.");
-              ui->estPricePlainTextEdit->setStyleSheet("background:transparent;color:rgb(255, 156, 157);");
-
-          }else{
-
-              m_db->persistData(m_acc->getId(), ui->stockLineEdit->text(), ui->sharesLineEdit->text().toDouble(),
-                                m_estimatedPrice, m_currency, m_order, m_acc);
-
-              m_acc->sell(m_acc->getId(), ui->stockLineEdit->text(), ui->sharesLineEdit->text().toDouble(),
-                         ui->stockPriceLabel->text().toDouble());
-
-          }
-
+      emit orderExecuted();
     }
 
 }
 
 void OrderWindow::on_searchButton_clicked(){
+
+    ui->estPricePlainTextEdit->clear();
+    ui->messageTextEdit->clear();
+    ui->sharesLineEdit->clear();
+
     QString stock = ui->stockLineEdit->text();
     emit searchStock(stock);
 }
@@ -101,6 +80,8 @@ void OrderWindow::loadBalance(const double balance, const QString currency){
 
 void OrderWindow::loadStockData(const QString stock){
 
+    ui->oSharesPlainTextEdit->clear();
+
     std::map<QString, Holdings> portfolio = m_acc->getPortfolio();
     double shares = 0.00;
 
@@ -111,13 +92,22 @@ void OrderWindow::loadStockData(const QString stock){
     }
 
     ui->oSharesPlainTextEdit->appendPlainText(QString::number(shares, 'f', 2));
+    ui->stockNameLabel->setStyleSheet(
+        "background-color: rgb(58, 58, 58); border: 1px solid rgb(75, 75, 75);"
+        "border-radius: 8px; padding: 3px 3px;"
+        );
+    ui->stockNameLabel->setAlignment(Qt::AlignCenter);
     ui->stockNameLabel->setText(stock);
+
+    ui->label_6->setStyleSheet("color: rgb(193, 196, 196); background: transparent");
+    ui->sharesLineEdit->setAlignment(Qt::AlignCenter);
 
     m_stockManager->getPrice(stock);
 
 }
 
 void OrderWindow::updateStockPrice(const QString& stock, const double price, const QString& currency){
+
 
     QString symbol;
 
@@ -130,6 +120,7 @@ void OrderWindow::updateStockPrice(const QString& stock, const double price, con
     ui->stockPriceLabel->setText(symbol + QString::number(price, 'f', 2));
     m_price = price;
     m_currency = currency;
+
 }
 
 void OrderWindow::on_sharesLineEdit_textChanged(const QString& text){
@@ -148,7 +139,33 @@ void OrderWindow::on_sharesLineEdit_textChanged(const QString& text){
     }
 
     ui->estPricePlainTextEdit->clear();
+    ui->messageTextEdit->clear();
     ui->estPricePlainTextEdit->appendPlainText(symbol + QString::number(total, 'f', 2));
+
+    int order = ( m_order == "Buy") ? 1 : 2;
+
+    switch(order){
+    case 1:
+
+        if(total > m_acc->getBalance()){
+
+            ui->messageTextEdit->appendPlainText("Available balance exceeded.");
+            ui->estPricePlainTextEdit->setStyleSheet("background:transparent;color:rgb(255, 156, 157);");
+        }
+
+        break;
+
+    case 2:
+
+        if(ui->sharesLineEdit->text().toDouble() > ui->oSharesPlainTextEdit->toPlainText().toDouble()){
+
+            ui->messageTextEdit->appendPlainText("Not enough owned shares.");
+            ui->estPricePlainTextEdit->setStyleSheet("background:transparent;color:rgb(255, 156, 157);");
+
+        }
+        break;
+
+    }
 
     m_estimatedPrice = total;
 

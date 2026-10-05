@@ -11,6 +11,8 @@
 #include <QStandardItemModel>
 #include <QMap>
 #include <QHeaderView>
+#include <QBrush>
+#include <QColor>
 #include <memory>
 #include <vector>
 #include "main.h"
