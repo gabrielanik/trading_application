@@ -70,12 +70,23 @@ void MainWindow::setTableView(const std::map <QString, Holdings> portfolio){
         "Stock",
         "Shares",
         "Investment",
-        "Current price"
+        "Current price",
+        "Return"
     });
 
     ui->tableView->setModel(m_model);
     ui->tableView->verticalHeader()->hide();
-    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->tableView->horizontalHeader()
+        ->setSectionResizeMode(QHeaderView::Stretch);
+
+    ui->tableView->horizontalHeader()
+        ->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+
+    ui->tableView->horizontalHeader()
+        ->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+
+    ui->tableView->horizontalHeader()
+        ->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     int rowIndex = 0;
 
@@ -99,6 +110,10 @@ void MainWindow::setTableView(const std::map <QString, Holdings> portfolio){
                 + " "
                 + holding.currency
                 )
+            );
+
+        row.append(
+            new QStandardItem("Loading...")
             );
 
         row.append(
@@ -140,7 +155,38 @@ void MainWindow::updateStockPrice(const QString& stock, const double price, cons
 
     priceItem->setText(
         QString::number(price, 'f', 2)
-        );
+        + " "
+        + currency);
+
+
+    QStandardItem* returnItem =
+        m_model->item(row, 4);
+
+    std::map<QString, Holdings> portfolio = m_account->getPortfolio();
+    double investment = portfolio.at(stock).investment;
+    double shares     = portfolio.at(stock).shares;
+
+    double unrealizedReturn =
+        price*shares - investment;
+
+    QString returnText;
+
+    if (unrealizedReturn > 0) {
+        returnText = "+" + QString::number(unrealizedReturn, 'f', 2);
+    } else {
+        returnText = QString::number(unrealizedReturn, 'f', 2);
+    }
+
+    returnItem->setText(returnText
+                        + " "
+                        + currency);
+
+    if (unrealizedReturn < 0) {
+        returnItem->setForeground(QColor(220, 80, 80));
+    }
+    else if (unrealizedReturn > 0) {
+        returnItem->setForeground(QColor(80, 180, 100));
+    }
 
 }
 
