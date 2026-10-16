@@ -13,6 +13,7 @@ OrderWindow::OrderWindow(const QString &order, DBManager *dbManager,
     m_order(order){
 
     ui->setupUi(this);
+    setWindowTitle("Place Order");
     ui->executeOrderButton->setText(order);
 
     connect(this,
@@ -35,20 +36,83 @@ OrderWindow::~OrderWindow(){
 
 void OrderWindow::on_executeOrderButton_clicked(){
 
-    m_db->persistData(m_acc->getId(), ui->stockLineEdit->text(), ui->sharesLineEdit->text().toDouble(),
-                    m_estimatedPrice, m_currency, m_order, m_acc);
+    ui->messageTextEdit->clear();
+
+    if(ui->sharesLineEdit->text().toDouble() < 0){
+        ui->messageTextEdit->appendPlainText("Shares must be greater than 0.");
+
+        return;
+    }
+
+    if(ui->stockLineEdit->text().isEmpty()){
+        ui->messageTextEdit->appendPlainText("Please choose a stock.");
+
+        return;
+    }
 
     if(m_order == "Buy"){
-      m_acc->buy(m_acc->getId(), ui->stockLineEdit->text(), ui->sharesLineEdit->text().toDouble(),
-               ui->stockPriceLabel->text().toDouble());
 
-      emit orderExecuted();
-    } else if (m_order == "Sell"){
-      m_acc->sell(m_acc->getId(), ui->stockLineEdit->text(), ui->sharesLineEdit->text().toDouble(),
-                ui->stockPriceLabel->text().toDouble());
+        if(m_estimatedPrice > m_acc->getBalance()){
 
-      emit orderExecuted();
+            ui->messageTextEdit->appendPlainText("Available balance exceeded.");
+            ui->estPricePlainTextEdit->setStyleSheet(
+                "background:transparent;"
+                "color:rgb(255, 156, 157);"
+            );
+        }
+
+            return;
+
+    } else if(m_order == "Sell"){
+
+        if(ui->sharesLineEdit->text().toDouble() > ui->oSharesPlainTextEdit->toPlainText().toDouble()){
+
+            ui->messageTextEdit->appendPlainText("Not enough owned shares.");
+            ui->estPricePlainTextEdit->setStyleSheet(
+                "background:transparent;"
+                "color:rgb(255, 156, 157);"
+            );
+        }
+
+    } else{
+
+        qDebug() << "Invalid order type: " << m_order;
+        return;
+
     }
+
+    const bool success = m_db->persistData(m_acc->getId(),
+                                           ui->stockLineEdit->text(),
+                                           ui->sharesLineEdit->text().toDouble(),
+                                           m_estimatedPrice,
+                                           m_currency,
+                                           m_order,
+                                           m_acc);
+    if(!success){
+
+        ui->messageTextEdit->appendPlainText(
+            "Order could not be completed (DB error)."
+            );
+        ui->estPricePlainTextEdit->setStyleSheet(
+            "background:transparent;"
+            "color:rgb(255, 156, 157);"
+            );
+    }
+
+    if(m_order == "Buy"){
+
+        m_acc->buy(ui->stockLineEdit->text(),
+                   ui->sharesLineEdit->text().toDouble(),
+                   m_price);
+
+    } else {
+
+        m_acc->sell(ui->stockLineEdit->text(),
+                    ui->sharesLineEdit->text().toDouble(),
+                    m_price);
+    }
+
+    emit orderExecuted();
 
 }
 
@@ -82,7 +146,7 @@ void OrderWindow::loadStockData(const QString stock){
 
     ui->oSharesPlainTextEdit->clear();
 
-    std::map<QString, Holdings> portfolio = m_acc->getPortfolio();
+    const auto& portfolio = m_acc->getPortfolio();
     double shares = 0.00;
 
     try {
@@ -128,9 +192,12 @@ void OrderWindow::on_sharesLineEdit_textChanged(const QString& text){
     ui->messageTextEdit->clear();
     ui->estPricePlainTextEdit->setStyleSheet("background:transparent;color:white;");
 
+    QString symbol;
+    int order;
+
     double shares = text.toDouble();
     double total = shares * m_price;
-    QString symbol;
+
 
     if(m_currency == "USD"){
         symbol = "$";
@@ -142,7 +209,16 @@ void OrderWindow::on_sharesLineEdit_textChanged(const QString& text){
     ui->messageTextEdit->clear();
     ui->estPricePlainTextEdit->appendPlainText(symbol + QString::number(total, 'f', 2));
 
-    int order = ( m_order == "Buy") ? 1 : 2;
+    if(ui->sharesLineEdit->text().toDouble() < 0){
+        ui->messageTextEdit->appendPlainText("Shares must be greater than 0.");
+    }
+
+    if(m_order == "Buy"){
+        order = 1;
+    }else if(m_order == "Sell"){
+        order = 2;
+    }
+
 
     switch(order){
     case 1:

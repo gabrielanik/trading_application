@@ -1,5 +1,6 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
+#include "dbmanager.h"
 
 LogInWindow::LogInWindow(DBManager *dbManager, QWidget *parent, Qt::WindowFlags f)
     : QDialog(parent),
@@ -14,35 +15,6 @@ LogInWindow::~LogInWindow()
     delete ui;
 }
 
-int LogInWindow::authUser(const QString &uname, const QString &pass){
-    int id = 0;
-
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("/Users/gabrielanik/trading_application/trading.db");
-
-    if(!db.open()) {
-        qDebug() << "Database error:"
-                 << db.lastError().text();
-    }
-
-    QSqlQuery query(db);
-
-    query.prepare("SELECT id FROM users WHERE username = :uname AND password = :pass");
-    query.bindValue(":uname", uname);
-    query.bindValue(":pass", pass);
-
-    if(!query.exec()){
-        qDebug() << "Query error:"
-                 << query.lastError().text();
-    }
-
-    if(query.next()){
-        id = query.value("id").toInt();
-    }
-
-    return id;
-}
-
 void LogInWindow::on_logInButton_clicked(){
 
     ui->invMessTextEdit->clear();
@@ -50,7 +22,7 @@ void LogInWindow::on_logInButton_clicked(){
     QString uname = ui->unameLineEdit->text();
     QString pass = ui->passLineEdit->text();
 
-    int id = authUser(uname, pass);
+    int id = m_db->authenticateUser(uname, pass);
 
     if (id != 0) {
         emit loginSuccess(id, m_db);

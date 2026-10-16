@@ -7,10 +7,13 @@ StockManager::StockManager(QObject *parent): QObject(parent)
 
 void StockManager::getPrice(const QString& stock){
 
+    QString apiKey = qEnvironmentVariable("TWELVE_DATA_API_KEY");
+
     QString urlString =
         "https://api.twelvedata.com/quote?symbol="
         + stock
-        + "&apikey=apikey";
+        + "&apikey="
+        + apiKey;
 
     QUrl url(urlString);
 

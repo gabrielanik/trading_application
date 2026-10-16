@@ -5,18 +5,45 @@
 #include <vector>
 
 
-void Account::buy(const int userId, const QString& stock, const double amount, const double price){
-    double total = amount*price;
-    portfolio[stock].shares += amount;
-    portfolio[stock].investment += total;
+void Account::buy(const QString& stock, const double amount, const double price){
 
-    // case when buying a new stock
+    Holdings holdings;
+    double shares;
+    double total = amount*price;
+
+    auto it = portfolio.find(stock);
+
+    if (it == portfolio.end()) {
+        Holdings holdings;
+        holdings.shares = amount;
+        holdings.investment = total;
+
+        portfolio.insert({stock, holdings});
+    }
+    else {
+        it->second.shares += amount;
+        it->second.investment += total;
+    }
+
+    balance -= total;
+
 }
 
-void Account::sell(const int userId, const QString& stock, const double amount, const double price){
-    double total = amount*price;
+void Account::sell(const QString& stock, const double amount, const double price){
+
+    double averageBuyPrice =
+        portfolio.at(stock).investment /
+        portfolio.at(stock).shares;
+
+    double costBasisSold =
+        amount * averageBuyPrice;
+
+    double saleProceeds = amount*price;
+
     portfolio[stock].shares -= amount;
-    portfolio[stock].investment -= total;
+    portfolio[stock].investment -= costBasisSold;
+
+    balance += saleProceeds;
 }
 
 int Account::getId() const{
@@ -31,7 +58,7 @@ QString Account::getCurrency() const{
     return currency;
 }
 
-std::map <QString, Holdings> Account::getPortfolio() const{
+const std::map <QString, Holdings>& Account::getPortfolio() const{
     return portfolio;
 }
 

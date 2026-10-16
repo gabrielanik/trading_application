@@ -28,7 +28,6 @@ private slots:
     void on_logInButton_clicked();
 
 private:
-    int authUser(const QString& uname, const QString& pass);
     Ui::LogInWindow *ui = nullptr;
     DBManager *m_db = nullptr;
 

@@ -24,6 +24,7 @@ qt_add_executable(trading_application
     stockmanager.h stockmanager.cpp
     orderwindow.ui
     orderwindow.h orderwindow.cpp
+    passwordutils.h passwordutils.cpp
 
 )
 

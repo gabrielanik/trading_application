@@ -39,7 +39,7 @@ void MainWindow::loadAccountData(const int userId){
     setTableView(portfolio);
 }
 
-void MainWindow::setBalance(const std::map <QString, Holdings> portfolio,
+void MainWindow::setBalance(const std::map <QString, Holdings>& portfolio,
                             const double balance, const QString currency){
 
 
@@ -64,7 +64,7 @@ void MainWindow::setBalance(const std::map <QString, Holdings> portfolio,
 
 }
 
-void MainWindow::setTableView(const std::map <QString, Holdings> portfolio){
+void MainWindow::setTableView(const std::map <QString, Holdings>& portfolio){
 
     m_model->setHorizontalHeaderLabels({
         "Stock",
@@ -162,7 +162,7 @@ void MainWindow::updateStockPrice(const QString& stock, const double price, cons
     QStandardItem* returnItem =
         m_model->item(row, 4);
 
-    std::map<QString, Holdings> portfolio = m_account->getPortfolio();
+    const auto& portfolio = m_account->getPortfolio();
     double investment = portfolio.at(stock).investment;
     double shares     = portfolio.at(stock).shares;
 
@@ -194,7 +194,7 @@ void MainWindow::on_buyPushButton_clicked(){
 
     emit orderRequest("Buy", m_db, m_account.get(), m_stockManager );
 }
-void::MainWindow::on_sellPushButton_clicked(){
+void MainWindow::on_sellPushButton_clicked(){
 
     emit orderRequest("Sell", m_db, m_account.get(), m_stockManager );
 }

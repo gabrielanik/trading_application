@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 #include <QString>
+#include <QDebug>
 
 #include "main.h"
 
@@ -18,13 +19,13 @@ private:
 public:
     Account(const int i, double b, QString c): id(i), balance(b), currency(c){};
 
-    void buy(const int userId, const QString& stock, const double amount, const double price);
-    void sell(const int userId, const QString& stock, const double amount, const double price);
+    void buy(const QString& stock, const double amount, const double price);
+    void sell(const QString& stock, const double amount, const double price);
 
     int getId() const;
     double getBalance() const;
     QString getCurrency() const;
-    std::map <QString, Holdings> getPortfolio() const;
+    const std::map <QString, Holdings>& getPortfolio() const;
     void setBalance(const double b);
     void setPortfolio(const std::map <QString, Holdings> p);
 

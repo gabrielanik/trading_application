@@ -8,6 +8,8 @@
 #include <QDebug>
 #include <QSqlQuery>
 #include <QSqlQueryModel>
+#include <QStandardPaths>
+#include <QDir>
 #include <memory>
 #include <vector>
 #include <map>
@@ -19,10 +21,15 @@ class DBManager
 {
 public:
     DBManager();
+    bool initializeDatabase();
+    bool seedDemoData();
+
     std::unique_ptr<Account> getAccount(const int id);
     std::map <QString, Holdings> getHoldings(const int id);
-    void persistData(const int id, const QString& stock, const double shares,
-                     const double total, const QString &currency, const QString& order,
+
+    int authenticateUser(const QString &username, QString &password);
+    bool persistData(const int id, const QString& stock, const double shares,
+                     const double price, const QString &currency, const QString& order,
                      Account *acc);
 
 private:
