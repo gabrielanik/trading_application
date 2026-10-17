@@ -19,8 +19,10 @@ class Account;
 
 class DBManager
 {
+
 public:
     DBManager();
+
     bool initializeDatabase();
     bool seedDemoData();
 

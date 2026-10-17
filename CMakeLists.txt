@@ -25,6 +25,8 @@ qt_add_executable(trading_application
     orderwindow.ui
     orderwindow.h orderwindow.cpp
     passwordutils.h passwordutils.cpp
+    README.md
+    ${CMAKE_CURRENT_SOURCE_DIR}/docs
 
 )
 

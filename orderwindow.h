@@ -26,7 +26,7 @@ public:
 
 signals:
     void searchStock(QString stock);
-    void orderExecuted();
+    void orderExecuted(int id);
     void back();
 
 private slots:

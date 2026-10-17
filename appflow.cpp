@@ -54,6 +54,9 @@ void AppFlow::handleOrderRequest(const QString &order, DBManager *dbManager, Acc
     connect( orderW, &OrderWindow::orderExecuted,
             this, &AppFlow::handleOrderExecution);
 
+    connect( orderW, &OrderWindow::orderExecuted,
+            mainW, &MainWindow::refreshAccountData);
+
     connect( orderW, &OrderWindow::back,
             this, &AppFlow::handleOrderExecution);
 
@@ -66,5 +69,6 @@ void AppFlow::handleOrderExecution(){
     orderW->close();
     orderW->deleteLater();
     orderW = nullptr;
+
     mainW->show();
 }

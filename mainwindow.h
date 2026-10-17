@@ -35,6 +35,8 @@ public:
     explicit MainWindow(const int userId, DBManager *dbManager, QWidget *parent = nullptr);
     ~MainWindow() override;
 
+    void refreshAccountData(const int id);
+
 signals:
     void orderRequest(const QString order, DBManager *dbManager, Account *account, StockManager *stockManager);
 

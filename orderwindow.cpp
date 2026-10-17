@@ -61,7 +61,6 @@ void OrderWindow::on_executeOrderButton_clicked(){
             );
         }
 
-            return;
 
     } else if(m_order == "Sell"){
 
@@ -112,7 +111,7 @@ void OrderWindow::on_executeOrderButton_clicked(){
                     m_price);
     }
 
-    emit orderExecuted();
+    emit orderExecuted(m_acc->getId());
 
 }
 

@@ -135,7 +135,7 @@ bool DBManager::seedDemoData(){
         );
 
     query.bindValue(":id", 1);
-    query.bindValue(":balance", 1000.00);
+    query.bindValue(":balance", 800.00);
     query.bindValue(":currency", "USD");
 
     if (!query.exec()) {
@@ -149,7 +149,9 @@ bool DBManager::seedDemoData(){
     query.prepare(
         "INSERT INTO portfolios "
         "(user_id, stock, shares, investment, currency) "
-        "VALUES (:id, :stock, :shares, :investment, :currency)"
+        "VALUES"
+        "(:id, :stock, :shares, :investment, :currency),"
+        "(:id1, :stock1, :shares1, :investment1, :currency1)"
         );
 
     query.bindValue(":id", 1);
@@ -157,6 +159,12 @@ bool DBManager::seedDemoData(){
     query.bindValue(":shares", 1.0);
     query.bindValue(":investment", 200.00);
     query.bindValue(":currency", "USD");
+
+    query.bindValue(":id1", 1);
+    query.bindValue(":stock1", "TSLA");
+    query.bindValue(":shares1", 0.9);
+    query.bindValue(":investment1", 360.00);
+    query.bindValue(":currency1", "USD");
 
     if (!query.exec()) {
         qDebug() << "Could not insert demo holding:"

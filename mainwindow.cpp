@@ -26,6 +26,17 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::refreshAccountData(const int id){
+
+    ui->accValueTextEdit->clear();
+    ui->sumTextEdit->clear();
+    ui->balanceTextEdit->clear();
+
+    m_model->removeRows(0, m_model->rowCount());
+
+    loadAccountData(id);
+}
+
 void MainWindow::loadAccountData(const int userId){
 
     m_account = m_db->getAccount(userId);
@@ -41,7 +52,6 @@ void MainWindow::loadAccountData(const int userId){
 
 void MainWindow::setBalance(const std::map <QString, Holdings>& portfolio,
                             const double balance, const QString currency){
-
 
     double sum = 0;
     QString symbol;
@@ -181,10 +191,12 @@ void MainWindow::updateStockPrice(const QString& stock, const double price, cons
                         + " "
                         + currency);
 
-    if (unrealizedReturn < 0) {
+    const double roundedReturn = std::round(unrealizedReturn * 100.0) / 100.0;
+
+    if (roundedReturn < 0.00) {
         returnItem->setForeground(QColor(220, 80, 80));
     }
-    else if (unrealizedReturn > 0) {
+    else if (roundedReturn > 0.00) {
         returnItem->setForeground(QColor(80, 180, 100));
     }
 

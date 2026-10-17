@@ -162,7 +162,7 @@ color:rgb(255, 156, 157);
     color: #F2F2F2;
     border: 1px solid rgb(117, 119, 119);
     border-radius: 8px;
-    padding: 6px 8px;
+    padding: 6px 6px;
 }
 
 QLineEdit:focus {
@@ -188,7 +188,7 @@ QLineEdit:focus {
     color: #F2F2F2;
     border: 1px solid rgb(117, 119, 119);
     border-radius: 8px;
-    padding: 6px 8px;
+    padding: 6px 6px;
 }
 
 QLineEdit:focus {
